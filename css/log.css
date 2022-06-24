@@ -1,0 +1,140 @@
+body {
+    font-family: 'Source Code Pro', monospace;
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+}
+
+
+header {
+    margin: 0 auto;
+    display: block;
+    width: fit-content;
+}
+
+header .summary, header .sourcesGood, header .sourcesBad {
+    display: inline-block;
+}
+
+header h3 {
+    padding: 0;
+    margin: 0;
+    color: white;
+}
+header .summary {
+    background-color:darkblue;
+}
+header .sourcesGood {
+    background-color: darkgreen;
+}
+
+header .sourcesBad {
+    background-color: darkred;
+}
+
+
+
+
+main table {
+    margin: 0 auto;
+    border-spacing: 0;
+}
+
+main tbody::before {
+	display: table-row;
+    content: 'Reports received on ' attr(data-content);
+    background-color:lightgray;
+    color: white;
+    background-color: darkslategray;
+}
+
+main tbody {
+    background-color:lightgray;
+}
+
+
+
+
+
+
+h1, h2, h3 {
+    text-align: center;
+}
+col.report td {
+    white-space:nowrap;
+}
+
+tr {
+    background-color: white;
+}
+
+main th {
+    position: sticky;
+    top: 0;
+    padding: 0.5em;
+    background-color: #000;
+    color: white;
+}
+
+main td {
+    vertical-align: top;
+    padding: 0.5em;
+    border-bottom: solid 3px lightgray;
+}
+
+main tr:first-child td {
+    border-top: solid 3px darkslategray;
+}
+
+main tr:last-child td {
+    border-bottom: solid 3px white;
+}
+
+/* tr:nth-child(even) td {
+    background-color: #ddd;
+    border-bottom: solid 3px #ddd;
+}
+
+tr.dmarcWarning:nth-child(even) td {
+    background-color: DarkOrange;
+    border-bottom: solid 3px DarkOrange;
+}
+
+tr.dmarcWarning:nth-child(odd) td {
+    background-color: Orange;
+    border-bottom: solid 3px Orange;
+}
+*/
+
+tr.dmarcWarning td {
+    background-color: #fdd;
+    border-color: lightcoral;
+    background-color: #ffa;
+    border-color: #aa0;
+}
+
+main tr:hover td, main tr.dmarcWarning:hover td {
+    border-bottom: solid 3px black;
+}
+
+
+
+
+/* Exact copy from dashboard */
+
+body > footer {
+    margin-top: 20px;
+    padding: 1em;
+    font-style: italic;
+    color: #111;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+body > header {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 2em;
+}
+
+body > footer p {
+    max-width: 65em;   
+    margin: auto;
+}

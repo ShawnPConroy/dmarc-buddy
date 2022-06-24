@@ -1,0 +1,14 @@
+# Ignore personal dev notes
+private-notes-*
+
+# Ignore files with that need to have the path in them
+.htaccess
+
+# Ignore server data
+*.log
+*.xml
+*.gz
+*.zip
+*.json
+
+attachment-test

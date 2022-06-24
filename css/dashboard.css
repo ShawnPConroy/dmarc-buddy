@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
+
+:root {
+    --pass-background-color: #cfc;
+    --fail-background-color: #fcc;
+    --today-pass-background-color: #e5ffe5;
+    --today-fail-background-color: #ffe5e5;
+    --pass-color: darkgreen;
+    --fail-color: darkred;
+    --domain-footer-border-color: #ccc
+    --all-footer-border-color: #555
+    --indicator-border-color: #555
+}
+
+body {
+    font-family: 'Source Code Pro', monospace;
+    background-image: linear-gradient(to bottom right, #FDABDD, #374A5A);
+    margin: 0;
+}
+
+
+
+header h1 {
+    text-align: center;
+}
+
+
+h2 {
+    width: fit-content;
+    margin: 0 0 0 0;
+    padding: 0;
+}
+
+main section {
+    background-image: linear-gradient(to bottom right, #FDFCFB, #E2D1C3);
+    width: fit-content;
+    box-shadow: 4px 4px 9px;
+    margin: 1em auto;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+main section.allDomains {
+    background-image: linear-gradient(to bottom right, #00C0FF, #4218B8);
+}
+
+
+/* Last 7 Day stats */
+
+.weekStats {
+    /* vertical-align: top;   */
+}
+
+.dayStats, .dayStatsHeader {
+    display: inline-block;
+    width: 5em;
+    white-space: nowrap;
+    overflow-x: visible;
+    text-align: center;
+    margin: 0;
+    vertical-align: top;  
+}
+
+.dayStatsHeader {
+    white-space: normal;
+}
+
+.dayStats:not(:nth-child(2)) {
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: var(--indicator-border);
+}
+
+.dayStats .pass {
+    display: block;
+}
+
+.dayStats .fail {
+    display: block;
+}
+
+
+/* Monthlys */
+
+section footer {
+    margin-top: 5px;
+    padding: 5px;
+    border-style: solid none none none;
+    border-width: 1px;
+    border-color: var(--domain-footer-border-color);
+    text-align: right;
+}
+
+.monthlySummary {
+    margin: 2px;
+    display: inline-block;
+}
+
+.monthlySummary .pass {
+    border-radius: 6px 0 0 6px;
+    padding: 2px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--indicator-border-color);
+    border-style: solid none solid solid;
+}
+
+.monthlySummary .fail {
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--indicator-border-color);
+    border-radius: 0 6px 6px 0;
+    padding: 2px;
+    border-style: solid solid solid none;
+}
+
+.allDomains footer {
+    border-color: var(--all-footer-border-color);
+}
+.allDomains footer a:link {
+    color: #aaf;
+}
+
+.allDomains footer a:visited {
+    color: #faf;
+}
+
+
+/* Pass, Fail, Highlight classes*/
+
+.pass {
+    background-color: var(--pass-background-color);
+}
+
+.fail {
+    background-color: var(--fail-background-color);
+}
+
+.dayStats:nth-child(2) .pass {
+    background-color: lighten(var(--pass-background-color), 10%);
+    background-color: var(--today-pass-background-color);
+}
+
+.dayStats:nth-child(2) .fail {
+    background-color: lighten(var(--fail-background-color), 10%);
+    background-color: var(--today-fail-background-color);
+}
+
+.pass.highlight {
+    color: var(--pass-color);
+}
+
+.fail.highlight {
+    color: var(--fail-color);
+}
+
+body > footer {
+    margin-top: 20px;
+    padding: 1em;
+    font-style: italic;
+    color: #111;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+body > header {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 2em;
+}
+
+body > footer p {
+    max-width: 65em;   
+    margin: auto;
+}

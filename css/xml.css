@@ -1,0 +1,231 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
+
+/* Visual warning for missing elements */
+
+feedback *::before {
+    content: "!! DMARC-Buddy Missing Name and Style !!: ";
+}
+
+feedback {
+    background-color: #FFDEE9;
+    background-image: linear-gradient(0deg, #FFDEE9 0%, #B5FFFC 100%);
+    min-height:100vh;
+}
+
+feedback * {
+    display: block;
+    border: solid 1px red;
+}
+
+/* Elements accounted for */
+feedback, version, report_metadata, policy_published, record, org_name, email, extra_contact_info, report_id, date_range, date_range begin, date_range end, domain, adkim, aspf, p, sp, pct, fo, row, identifiers, source_ip, auth_results, auth_results spf, auth_results selector, auth_results dkim, auth_results result, auth_results scope, source_ip, count, policy_evaluated, policy_evaluated spf, policy_evaluated dkim, reason, disposition, envelope_to, header_from, envelope_from {
+    border: none;
+}
+
+feedback {
+    counter-reset: record;
+    display: block;
+    max-width: 500px;
+    margin: auto;
+    font-family: 'Source Code Pro', monospace;
+}
+
+feedback::after {
+    content: "View source for raw XML";
+    clear: both;
+}
+
+feedback version::before {
+    content: "Feedback version: ";
+}
+
+report_metadata *, policy_published *, record * {
+    display: block;
+    margin: 0 0.5em;
+}
+
+report_metadata, policy_published {
+    border-left: 5px solid black;
+    background-color: lightcyan;
+    padding: 2px;
+    display: block;
+    /* width: 45%; */
+    margin: 1em auto;
+}
+
+/* Metadata */
+report_metadata::before {
+    content: "Report Metadata:";
+}
+
+
+org_name::before {
+    content: "Reported by: ";
+}
+
+email::before {
+    content: "Email: ";
+}
+
+extra_contact_info::before {
+    content: "Contact: ";
+}
+
+report_id::before {
+    content: "ID: ";
+}
+
+date_range::before {
+    content: "Report date range: ";
+}
+
+date_range begin::before {
+    content: "Start: ";
+}
+
+date_range end::before {
+    content: "End: ";
+}
+
+
+/* Domain policy */
+
+policy_published::before {
+    content: "Your policy noted at the time: ";
+}
+
+domain::before {
+    content: "Domain: ";
+}
+
+adkim::before {
+    content: "DKIM Action: ";
+}
+
+aspf::before {
+    content: "SPF Action: ";
+}
+
+p::before {
+    content: "Policy: ";
+}
+
+sp::before {
+    content: "Subdomain Policy: ";
+}
+
+pct::before {
+    content: "Percent: ";
+}
+
+pct::after {
+    content: "%";
+}
+
+fo::before {
+    content: "FO: ";
+}
+
+/* record */
+
+record::before {
+    counter-increment: record;
+    content: "Record " counter(record);
+
+}
+
+record {
+    display: block;
+    border-left: solid 5px goldenrod;
+    background-color: lightgoldenrodyellow;
+    padding: 2px;
+    margin: 1em auto;
+}
+
+row, identifiers, auth_results {
+    display: block;
+    margin-bottom: 1em;
+}
+
+source_ip::before {
+    content: 'Sending IP address: ';
+}
+
+count::before {
+    content: 'Number of emails: ';
+}
+
+policy_evaluated::before {
+    content: 'Results: ';
+}
+
+policy_evaluated reason::before {
+    content: 'Reason: ';
+}
+
+reason type::before {
+    content: 'Type: '
+}
+
+reason comment::before {
+    content: 'Comment: '
+}
+
+disposition::before {
+    content: 'Action taken: ';
+}
+
+row spf, row dkim {
+    font-weight: bold;
+}
+
+
+identifiers::before {
+    content: 'Indentifiers: ';
+}
+
+identifiers {
+    display: inline-block;
+}
+
+envelope_to::before {
+    content: 'envelope-to: ';
+}
+
+header_from::before {
+    content: 'Email header: ';
+}
+
+envelope_from::before {
+    content: 'envelope-from: ';
+}
+
+
+row::before, auth_results::before {
+    content: none;
+}
+
+spf::before {
+    content: 'SPF authentification: '
+}
+
+dkim::before {
+    content: 'DKIM authentification: '
+}
+
+
+auth_results spf, auth_results dkim {
+    display: inline-block;
+}
+
+auth_results result::before {
+    content: 'Result: ';
+}
+
+auth_results selector::before {
+    content: 'Selector: ';
+}
+
+auth_results scope::before {
+    content: 'Scope: '
+}
