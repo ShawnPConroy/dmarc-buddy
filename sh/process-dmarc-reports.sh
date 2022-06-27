@@ -88,7 +88,7 @@ function process_reports {
     done
 
     # Show file not moved on success
-    for leftover in ${REPORT_PATH}/*
+    for leftover in ${REPORT_PATH}/*.xml ${REPORT_PATH}/*.gz ${REPORT_PATH}/*.zip
     do
         echo " - Leftover $leftover"
     done

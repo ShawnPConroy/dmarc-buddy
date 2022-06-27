@@ -1,0 +1,3 @@
+Action dmarc-report ../php/show-xml.php
+Action dmarc-report /path-to/dmarc-buddy/php/show-xml.php
+AddHandler dmarc-report .xml
