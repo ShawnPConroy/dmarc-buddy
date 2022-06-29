@@ -74,6 +74,7 @@ showDomain('all', $stats['all'], $monthsAgoId, $monthsAgoName, $dataUrl);
 echo "</section>\n\n";
 
 foreach($domainList as $domainName) {
+  if ($domainName == "all") continue;
   echo "\n\n<section>\n";
   showDomain($domainName, $stats[$domainName], $monthsAgoId, $monthsAgoName, $dataUrl);
   echo "</section>\n\n";

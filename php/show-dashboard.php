@@ -33,7 +33,7 @@ function loadMonthly($file, $month, &$stats) {
         
         // If $i==0 it's the real current month, move current emails to the top
         if ($i==0) {
-          $domainList[$data['lastReport']] = $domain;
+          $domainList[$data['lastReport'].$domain] = $domain;
         }
         else if (!in_array($domain, $domainList)) {
           // Default to 9, which sorts at the bottom of any year
