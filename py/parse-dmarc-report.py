@@ -2,8 +2,7 @@
 import os, sys, getopt
 import xml.etree.ElementTree
 from datetime import datetime
-from dns import resolver,reversename
-
+from socket import gethostbyaddr
 
 # Parse the argv (argument vector) parameters
 # To get the path, in the future maybe a debug mode
@@ -51,7 +50,8 @@ date_end = datetime.fromtimestamp(float(date_end)).strftime("%Y-%m-%d %H:%M:%S")
 for record in report.findall('record'):
 
     source_ip = record.find('row/source_ip').text
-    source_ip_lookup = str(reversename.from_address(source_ip))
+    name, alias, addresslist = gethostbyaddr(source_ip)
+    source_ip_lookup = name
     count = record.find('row/count').text
 
     # SPF policy evaluation, DKIM result

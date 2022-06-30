@@ -40,7 +40,7 @@ if (is_legal_request($filePath, 'log')) {
               'Start: ' . $data[DATE_START]. '<br/>' . 
               '  End: ' . $data[DATE_END] . '<br/>' . 
               'By: ' . $data[REPORT_ORG] . '<br/>' .
-              'ID: <a href="../'.$dataUrl.'/' . $data[REPORT_FILENAME] . '">' . $data[REPORT_ID] . '</a><br/>';
+              'ID: <a href="../'.$dataUrl.'/' . trim($data[REPORT_FILENAME]) . '">' . $data[REPORT_ID] . '</a><br/>';
     $count = $data[COUNT];
 
     $result = '<strong>SPF results</strong>:<br/>'.
@@ -64,7 +64,9 @@ if (is_legal_request($filePath, 'log')) {
     
     /* Skipping reverse lookup which sucks */
     $sources = 'Sending IP: <a href="https://mxtoolbox.com/SuperTool.aspx?action=ptr:'.
-                $data[SOURCE_IP].'">'.$data[SOURCE_IP].'</a> '.$domains.'<br/>';
+                $data[SOURCE_IP].'">'.$data[SOURCE_IP].'</a><br/>'.
+                $data[SOURCE_IP_LOOKUP].
+                $domains.'<br/>';
 
     $records[substr($data[DATE_RECIEVED],0,10)][$data[DATE_RECIEVED].$recordNum++] = [
       'statusClass' => $resultClass,
