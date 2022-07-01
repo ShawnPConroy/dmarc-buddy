@@ -83,14 +83,14 @@ if (is_legal_request($filePath, 'log')) {
   $monthlyJson = file_get_contents($fileInfo['dirname'].'/'.$summaryDate.'-monthly.json');
   $stats = json_decode($monthlyJson, true);
 
-  $monthPass = 991;
   $last7pass = $stats[$domainName]['pass']['last7'];
   $last7fail = $stats[$domainName]['fail']['last7'];
   $last28pass = $stats[$domainName]['pass']['last28'];
   $last28fail = $stats[$domainName]['fail']['last28'];
-  $monthFail = 992;
-  $weekPass = 993;
-  $weekFail = 994;
+  $lastMonthPass = $stats[$domainName]['pass']['lastMonth'];
+  $lastMonthFail = $stats[$domainName]['fail']['lastMonth'];
+  $monthPass = $stats[$domainName]['pass']['count'];
+  $monthFail = $stats[$domainName]['fail']['count'];
 
   $weekIndicators = '';
   for($i=0; $i<=7; $i++) {

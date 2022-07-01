@@ -55,19 +55,50 @@ def parse_parameters(path):
     return path
 
 
-def generate_monthly_json(month, data_path):
-    monthly_stats = process_logs(month, data_path)
+def generate_monthly_json(month, last_month, data_path):
+    last_months_stats = process_logs(last_month, data_path)
+    f = open(data_path+"/"+str(last_month)+"-monthly.json", 'w')
+    f.write(json.dumps(last_months_stats))
+    f.close()
+    monthly_stats = process_logs(month, data_path, last_months_stats)
     f = open(data_path+"/"+str(month)+"-monthly.json", 'w')
     f.write(json.dumps(monthly_stats))
     f.close()
 
-
-def process_logs(month, data_path):
+def process_logs(month, data_path, old_stats = None):
     domain_stats = dict()
+
     for root, dirs, files in os.walk(data_path):
         for file in files:
             if file.endswith('.log') and file.startswith(month):
-                domain_stats[file[8:-4]] = process_domain_csv(root+'/'+file)
+                domain = file[8:-4]
+                # This this month's stats
+                domain_stats[domain] = process_domain_csv(root+'/'+file)
+                
+                # last month's stats
+                if old_stats is not None and domain in old_stats:
+                    
+                    # TODO this only needs to happen if there is a roll over for last 7
+                    for i in range(0, 7):
+                        if old_stats[domain]['pass'][str(i)] != 0 and domain_stats[domain]['pass'][str(i)] == 0:
+                            domain_stats[domain]['pass'][str(i)] = old_stats[domain]['pass'][str(i)]
+                        if old_stats[domain]['fail'][str(i)] != 0 and domain_stats[domain]['fail'][str(i)] == 0:
+                            domain_stats[domain]['fail'][str(i)] = old_stats[domain]['fail'][str(i)]
+
+                    # Add the last 7 days of this month to last 7 days of last month
+                    # Since we reprocess last month, its the correct number.
+                    domain_stats[domain]['pass']['last7'] += old_stats[domain]['pass']['last7']
+                    domain_stats[domain]['fail']['last7'] += old_stats[domain]['fail']['last7']
+                    # Check last 28 days, which needs to happen almost the entire month
+                    domain_stats[domain]['pass']['last28'] += old_stats[domain]['pass']['last28']
+                    domain_stats[domain]['fail']['last28'] += old_stats[domain]['fail']['last28']
+                    domain_stats[domain]['pass']['lastMonth'] = old_stats[domain]['pass']['count']
+                    domain_stats[domain]['fail']['lastMonth'] = old_stats[domain]['fail']['count']
+                
+                elif old_stats is None:
+                    # Pull in the pass and fail counts from the previous month, sigh.
+                    domain_stats[domain]['pass']['lastMonth'] = '?'
+                    domain_stats[domain]['fail']['lastMonth'] = '?'
     
     return domain_stats
 
@@ -88,6 +119,7 @@ def process_domain_csv(file):
     stats['pass']['7'] = 0
     stats['pass']['last7'] = 0
     stats['pass']['last28'] = 0
+    stats['pass']['lastMonth'] = 0
 
     stats['fail'] = dict()
     stats['fail']['sources'] = dict()
@@ -102,6 +134,7 @@ def process_domain_csv(file):
     stats['fail']['7'] = 0
     stats['fail']['last7'] = 0
     stats['fail']['last28'] = 0
+    stats['fail']['lastMonth'] = 0
 
     stats['lastReport'] = datetime.datetime.strptime("2022-02-22 20:22:02", "%Y-%m-%d %H:%M:%S")
 
@@ -154,5 +187,15 @@ this_month = datetime.date.today()
 last_month = this_month - datetime.timedelta(days=this_month.day)
 this_month = this_month.strftime("%Y-%m")
 last_month = last_month.strftime("%Y-%m")
-generate_monthly_json(last_month, DATA_PATH)
-generate_monthly_json(this_month, DATA_PATH)
+
+# We shouldn't need to generate last month's data at the end of the month
+# We do need to do it at least once to make sure last mintues reports
+# were properly processed. That depends on how often reports are processed.
+# Since it's by date recieved late reports don't matter.
+#
+# We could just load the stats if we are within last 28 days.
+# Except, last month's last28 only updated correctly if we run it.
+
+
+# generate_monthly_json(last_month, DATA_PATH)
+generate_monthly_json(this_month, last_month, DATA_PATH)
