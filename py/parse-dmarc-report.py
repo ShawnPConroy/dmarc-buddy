@@ -2,7 +2,7 @@
 import os, sys, getopt
 import xml.etree.ElementTree
 from datetime import datetime
-from socket import gethostbyaddr
+from socket import gethostbyaddr, herror
 
 # Parse the argv (argument vector) parameters
 # To get the path, in the future maybe a debug mode
@@ -50,7 +50,10 @@ date_end = datetime.fromtimestamp(float(date_end)).strftime("%Y-%m-%d %H:%M:%S")
 for record in report.findall('record'):
 
     source_ip = record.find('row/source_ip').text
-    name, alias, addresslist = gethostbyaddr(source_ip)
+    try:
+        name, alias, addresslist = gethostbyaddr(source_ip)
+    except herror:
+        name = "Unknown/None"
     source_ip_lookup = name
     count = record.find('row/count').text
 
@@ -59,26 +62,26 @@ for record in report.findall('record'):
     if spf_eval is not None:
         spf_eval = spf_eval.text
     else:
-        spf_eval = 'none'
+        spf_eval = ''
     
     spf_result = record.find('auth_results/spf/result')
     if spf_result is not None:
         spf_result = spf_result.text
     else:
-        spf_result = 'none'
+        spf_result = ''
 
     # DKIM policy evaluation, DKIM result
     dkim_eval = record.find('row/policy_evaluated/dkim')
     if dkim_eval is not None:
         dkim_eval = dkim_eval.text
     else:
-        dkim_eval = 'none reported'
+        dkim_eval = ''
 
     dkim_result = record.find('auth_results/dkim/result')
     if dkim_result is not None:
         dkim_result = dkim_result.text
     else:
-        dkim_result = 'none reported'
+        dkim_result = ''
 
     envelope_from = record.find('identifiers/envelope_from')
     if envelope_from is not None:
