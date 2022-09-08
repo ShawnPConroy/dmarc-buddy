@@ -3,8 +3,10 @@
 import getopt
 import sys
 import email
+import uuid
 from datetime import datetime
 from time import strftime
+from os.path import splitext
 
 PATH = '.'
 
@@ -14,10 +16,10 @@ REPORT_TYPES = {'text/xml', 'application/x-gzip', 'application/gzip',
 # Parse the argv (argument vector) parameters
 # To get the path, in the future maybe a debug mode
 def parse_parameters(PATH):
-
+    email_filename = ""
     try:
-        options = "hp:e:"
-        long_options = ["Help", "Path=", 'Echo=']
+        options = "hp:e:f:"
+        long_options = ["Help", "Path=", 'Echo=','File=']
         opts, args = getopt.getopt(sys.argv[1:], options, long_options)
             
         for opt, arg in opts:
@@ -26,6 +28,9 @@ def parse_parameters(PATH):
             elif opt in ("-e", "--Echo"):
                 print("echo: "+arg)
                 exit(1)
+            elif opt in ("-f", "--File"):
+                print("Running from file")
+                email_filename = arg
             elif opt in ("-h", "--Help"):
                 print("python save-dmarc-attachments.py -p /home/username/path-to-dmarc-buddy")
                 exit(2)
@@ -33,7 +38,7 @@ def parse_parameters(PATH):
         print(str(err))
         exit(2)
     
-    return PATH
+    return PATH, email_filename
 
 # How emails are regularly processed
 def email_from_pipe():
@@ -43,8 +48,8 @@ def email_from_pipe():
     return email.message_from_string(full_msg)
 
 # For testing purposes
-def email_from_file():
-    f = open(PATH+'test-email.txt', 'r')
+def email_from_file(filename):
+    f = open(filename, 'r')
     full_msg = f.read()
     f.close()
 
@@ -61,7 +66,11 @@ def download_reports(msg, REPORT_PATH, REPORT_TYPES):
         parts += 1
         if ctype in REPORT_TYPES:
             downloads += 1
-            f = open(REPORT_PATH+part.get_filename(), 'w')
+            file_name, file_ext = splitext(part.get_filename())
+            if (file_ext == '.gz'):
+                file_ext = ".xml.gz"
+                file_name = file_name[:-4]
+            f = open(REPORT_PATH+file_name+'-'+str(uuid.uuid4())+file_ext, 'w')
             f.write(part.get_payload(decode=True))
             f.close()
         ctypes += '\n\t\t'+ctype+' : '+str(part.get_filename())
@@ -81,11 +90,15 @@ def add_to_log(msg, downloads, parts, ctypes, LOG_PATH):
     f.write('\n')
     f.close()
 
-PATH = parse_parameters(PATH)
+PATH, email_filename = parse_parameters(PATH)
 REPORT_PATH = PATH + '/downloads/'
 LOG_PATH = PATH + '/logs/'
 TEST_PATH = PATH + '/tests/'
 
-msg = email_from_pipe()
+if email_filename == "":
+    msg = email_from_pipe()
+else:
+    msg = email_from_file(email_filename)
+
 downloads, parts, ctypes = download_reports(msg, REPORT_PATH, REPORT_TYPES)
 add_to_log(msg, downloads, parts, ctypes, LOG_PATH)
