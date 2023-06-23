@@ -126,6 +126,10 @@ fo::before {
     content: "FO: ";
 }
 
+np::before {
+    content: "NP: ";
+}
+
 /* record */
 
 record::before {
