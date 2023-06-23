@@ -18,7 +18,7 @@ feedback * {
 }
 
 /* Elements accounted for */
-feedback, version, report_metadata, policy_published, record, org_name, email, extra_contact_info, report_id, date_range, date_range begin, date_range end, domain, adkim, aspf, p, sp, pct, fo, row, identifiers, source_ip, auth_results, auth_results spf, auth_results selector, auth_results dkim, auth_results result, auth_results scope, source_ip, count, policy_evaluated, policy_evaluated spf, policy_evaluated dkim, reason, reason type, reason comment, disposition, envelope_to, header_from, envelope_from {
+feedback, version, report_metadata, policy_published, np, record, org_name, email, extra_contact_info, report_id, date_range, date_range begin, date_range end, domain, adkim, aspf, p, sp, pct, fo, row, identifiers, source_ip, auth_results, auth_results spf, auth_results selector, auth_results dkim, auth_results result, auth_results scope, source_ip, count, policy_evaluated, policy_evaluated spf, policy_evaluated dkim, reason, reason type, reason comment, disposition, envelope_to, header_from, envelope_from {
     border: none;
 }
 
