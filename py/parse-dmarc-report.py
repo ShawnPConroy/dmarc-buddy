@@ -32,73 +32,93 @@ PATH = '.'
 PATH, file = parse_parameters(PATH)
 DATA_PATH = PATH+'/data'
 
+
 # Open report
 date_recieved = datetime.fromtimestamp(os.path.getmtime(file)).strftime("%Y-%m-%d %H:%M:%S")
 month_recieved = datetime.fromtimestamp(os.path.getmtime(file)).strftime("%Y-%m")
 report = xml.etree.ElementTree.parse(file).getroot()
 
+# Find namespace
+# Some reports use a DMARC 2.0 name space, despite being in draft
+# eg: <feedback xmlns="urn:ietf:params:xml:ns:dmarc-2.0">
+if report.tag == "feedback":
+    ns = ""
+elif report.tag == "{urn:ietf:params:xml:ns:dmarc-2.0}feedback":
+    ns = '{urn:ietf:params:xml:ns:dmarc-2.0}'
+else:
+    print("Error: Unrecognized name space")
+    print('Namespace', report.tag)
+    exit(1)
+
 # Report metadata
 report_filename = os.path.basename(file)
-report_org = report.find('report_metadata/org_name').text
-report_id = report.find('report_metadata/report_id').text
-source_domain = report.find('policy_published/domain').text
-date_start = report.find('report_metadata/date_range/begin').text
-date_end = report.find('report_metadata/date_range/end').text
+
+try:
+    report_org = report.find(ns+'report_metadata/'+ns+'org_name').text
+    report_id = report.find(ns+'report_metadata/'+ns+'report_id').text
+    source_domain = report.find(ns+'policy_published/'+ns+'domain').text
+    date_start = report.find(ns+'report_metadata/'+ns+'date_range/'+ns+'begin').text
+    date_end = report.find(ns+'report_metadata/'+ns+'date_range/'+ns+'end').text
+except AttributeError:
+    print('AttributeError', "Cannot find metadata")
+    exit(1)
+
+
+
 date_start = datetime.fromtimestamp(float(date_start)).strftime("%Y-%m-%d %H:%M:%S")
 date_end = datetime.fromtimestamp(float(date_end)).strftime("%Y-%m-%d %H:%M:%S")
 
-for record in report.findall('record'):
-
-    source_ip = record.find('row/source_ip').text
+for record in report.findall(ns+'record'):
+    source_ip = record.find(ns+'row/'+ns+'source_ip').text
     try:
         name, alias, addresslist = gethostbyaddr(source_ip)
     except herror:
         name = "Unknown/None"
     source_ip_lookup = name
-    count = record.find('row/count').text
+    count = record.find(ns+'row/'+ns+'count').text
 
     # SPF policy evaluation, DKIM result
-    spf_eval = record.find('row/policy_evaluated/spf')  
+    spf_eval = record.find(ns+'row/'+ns+'policy_evaluated/'+ns+'spf')  
     if spf_eval is not None:
         spf_eval = spf_eval.text
     else:
         spf_eval = ''
     
-    spf_result = record.find('auth_results/spf/result')
+    spf_result = record.find(ns+'auth_results/'+ns+'spf/'+ns+'result')
     if spf_result is not None:
         spf_result = spf_result.text
     else:
         spf_result = ''
 
     # DKIM policy evaluation, DKIM result
-    dkim_eval = record.find('row/policy_evaluated/dkim')
+    dkim_eval = record.find(ns+'row/'+ns+'policy_evaluated/'+ns+'dkim')
     if dkim_eval is not None:
         dkim_eval = dkim_eval.text
     else:
         dkim_eval = ''
 
-    dkim_result = record.find('auth_results/dkim/result')
+    dkim_result = record.find(ns+'auth_results/'+ns+'dkim/'+ns+'result')
     if dkim_result is not None:
         dkim_result = dkim_result.text
     else:
         dkim_result = ''
 
-    envelope_from = record.find('identifiers/envelope_from')
+    envelope_from = record.find(ns+'identifiers/'+ns+'envelope_from')
     if envelope_from is not None:
         envelope_from = envelope_from.text
     else:
         envelope_from = ''
-    header_from = record.find('identifiers/header_from')
+    header_from = record.find(ns+'identifiers/'+ns+'header_from')
     if header_from is not None:
         header_from = header_from.text
     else:
         header_from = ''
-    dkim_domain = record.find('auth_results/dkim/domain')
+    dkim_domain = record.find(ns+'auth_results/'+ns+'dkim/'+ns+'domain')
     if dkim_domain is not None:
         dkim_domain = dkim_domain.text
     else:
         dkim_domain = ''
-    spf_domain = record.find('auth_results/spf/domain')
+    spf_domain = record.find(ns+'auth_results/'+ns+'spf/'+ns+'domain')
     if spf_domain is not None:
         spf_domain = spf_domain.text
     else:
