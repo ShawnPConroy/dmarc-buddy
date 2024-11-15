@@ -31,7 +31,7 @@ function prepare_reports {
 
     for archive in ${REPORT_PATH}/*.zip
     do
-        unzip $archive -d ${REPORT_PATH}/
+        unzip -q $archive -d ${REPORT_PATH}/
         if [ $? -eq 0 ]
         then
             rm ${verbose} $archive
